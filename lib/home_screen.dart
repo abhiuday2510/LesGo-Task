@@ -99,7 +99,7 @@ class HomeScreen extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     final newPost = Post(
-                        id: 0,
+                        id: "0",
                         content: contentController.text,
                         imageUrl: imageUrl);
                     print("Adding post: ${newPost.content}");

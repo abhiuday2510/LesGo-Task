@@ -1,5 +1,5 @@
 class Post {
-  int id;
+  String id;
   String content;
   String? imageUrl;
   int likes;
@@ -15,7 +15,7 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      id: json['id'] is int ? json['id'] : int.parse(json['id']),
+      id: json['id'] as String,
       content: json['content'],
       imageUrl: json['imageUrl'],
       likes: json['likes'],

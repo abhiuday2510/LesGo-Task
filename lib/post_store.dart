@@ -43,8 +43,14 @@ abstract class _PostStore with Store {
         body: json.encode(postJson),
       );
 
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
       if (response.statusCode == 201) {
-        final newPost = Post.fromJson(json.decode(response.body));
+        final decodedJson = json.decode(response.body);
+        print("Decoded JSON: $decodedJson");
+
+        final newPost = Post.fromJson(decodedJson);
         posts.add(newPost);
         print("Post added: ${newPost.content} with id: ${newPost.id}");
       } else {
