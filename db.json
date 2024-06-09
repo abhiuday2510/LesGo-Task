@@ -1,0 +1,29 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "content": "First post",
+      "imageUrl": null,
+      "likes": 2,
+      "comments": [
+        "wow"
+      ]
+    },
+    {
+      "id": "3978",
+      "content": "tesr",
+      "imageUrl": "/data/user/0/com.example.lesgo_task/cache/432914cb-9f07-4d39-8e26-df213341f86e/32ca2a73-f393-4ead-8e5c-7da180e146fc-1_all_180987.heif",
+      "likes": 3,
+      "comments": [
+        "damn"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "name": "User1",
+      "followed": true
+    }
+  ]
+}
