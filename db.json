@@ -4,22 +4,31 @@
       "id": "2a73",
       "content": "test",
       "imageUrl": "/data/user/0/com.example.lesgo_task/cache/441610fd-ff24-49b9-a068-c665cdf3d6b3/1000000033.jpg",
-      "likes": 1,
-      "comments": []
+      "likes": 2,
+      "comments": [
+        "user1 commented"
+      ],
+      "userId": "1"
     },
     {
       "id": "9860",
       "content": "test",
       "imageUrl": "/data/user/0/com.example.lesgo_task/cache/1866377c-5361-418b-9232-0abab0a3cb07/63401.jpg",
       "likes": 1,
-      "comments": []
+      "comments": [
+        "User2 : wow"
+      ],
+      "userId": "2"
     },
     {
       "id": "5ab6",
       "content": "test2 ",
       "imageUrl": "/data/user/0/com.example.lesgo_task/cache/4c979a87-9384-4382-a3c5-d3fcdb7be2de/63401.jpg",
       "likes": 1,
-      "comments": []
+      "comments": [
+        "User3 : nice"
+      ],
+      "userId": "3"
     },
     {
       "id": "2d30",
@@ -27,15 +36,50 @@
       "imageUrl": "/data/user/0/com.example.lesgo_task/cache/b2c67aa2-0099-4faa-9bb3-18c05a7a6f8c/32ca2a73-f393-4ead-8e5c-7da180e146fc-1_all_180968.heif",
       "likes": 2,
       "comments": [
-        "dsa"
-      ]
+        "dsa",
+        "User1 : good"
+      ],
+      "userId": "1"
+    },
+    {
+      "id": "bd04",
+      "content": "user2 post",
+      "imageUrl": "/data/user/0/com.example.lesgo_task/cache/dc1a5aeb-bfdf-407b-b844-83377d6c4295/32ca2a73-f393-4ead-8e5c-7da180e146fc-1_all_179575.heif",
+      "likes": 0,
+      "comments": [],
+      "userId": "2"
+    },
+    {
+      "id": "435e",
+      "content": "hello",
+      "imageUrl": "/data/user/0/com.example.lesgo_task/cache/32d4e710-c8f7-4974-abec-649a82abbb1d/1000000029.jpg",
+      "likes": 1,
+      "comments": [
+        "User3 : i want it"
+      ],
+      "userId": "2"
+    },
+    {
+      "id": "a167",
+      "content": "testing...",
+      "imageUrl": "/data/user/0/com.example.lesgo_task/cache/f8ae7f3d-9cf2-44f7-8d51-916f34376098/62731.jpg",
+      "likes": 0,
+      "comments": [],
+      "userId": "1"
     }
   ],
   "users": [
     {
       "id": "1",
-      "name": "User1",
-      "followed": true
+      "name": "User1"
+    },
+    {
+      "id": "2",
+      "name": "User2"
+    },
+    {
+      "id": "3",
+      "name": "User3"
     }
   ]
 }

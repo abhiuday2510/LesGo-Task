@@ -4,6 +4,7 @@ class Post {
   String? imageUrl;
   int likes;
   List<String> comments;
+  String userId; // Add userId to track who created the post
 
   Post({
     required this.id,
@@ -11,6 +12,7 @@ class Post {
     this.imageUrl,
     this.likes = 0,
     List<String>? comments,
+    required this.userId,
   }) : comments = comments ?? [];
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Post {
       imageUrl: json['imageUrl'],
       likes: json['likes'],
       comments: List<String>.from(json['comments']),
+      userId: json['userId'], // Deserialize userId
     );
   }
 
@@ -30,6 +33,7 @@ class Post {
       'imageUrl': imageUrl,
       'likes': likes,
       'comments': comments,
+      'userId': userId, // Serialize userId
     };
   }
 }

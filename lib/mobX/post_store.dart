@@ -1,22 +1,26 @@
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'post_model.dart';
+import '../models/post_model.dart';
+import '../models/user_model.dart';
 
 part 'post_store.g.dart';
 
 class PostStore = _PostStore with _$PostStore;
 
 abstract class _PostStore with Store {
-  static const apiUrl = 'http://192.168.1.11:3000/posts';
+  static const apiUrl = 'http://192.168.1.11:3000';
 
   @observable
   ObservableList<Post> posts = ObservableList<Post>();
 
+  @observable
+  ObservableMap<String, User> users = ObservableMap<String, User>();
+
   @action
   Future<void> fetchPosts() async {
     try {
-      final response = await http.get(Uri.parse(apiUrl));
+      final response = await http.get(Uri.parse('$apiUrl/posts'));
       if (response.statusCode == 200) {
         List<dynamic> postList = json.decode(response.body);
         posts = ObservableList<Post>.of(
@@ -32,24 +36,39 @@ abstract class _PostStore with Store {
   }
 
   @action
+  Future<void> fetchUsers() async {
+    try {
+      final response = await http.get(Uri.parse('$apiUrl/users'));
+      if (response.statusCode == 200) {
+        List<dynamic> userList = json.decode(response.body);
+        users = ObservableMap<String, User>.of(
+          Map.fromIterable(userList,
+              key: (u) => u['id'] as String,
+              value: (u) => User.fromJson(u as Map<String, dynamic>)),
+        );
+        print("Fetched users: ${users.length}");
+      } else {
+        print("Failed to fetch users: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching users: $e");
+    }
+  }
+
+  @action
   Future<void> addPost(Post post) async {
     try {
       final postJson = post.toJson();
       postJson.remove('id');
 
       final response = await http.post(
-        Uri.parse(apiUrl),
+        Uri.parse('$apiUrl/posts'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(postJson),
       );
 
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
-
       if (response.statusCode == 201) {
         final decodedJson = json.decode(response.body);
-        print("Decoded JSON: $decodedJson");
-
         final newPost = Post.fromJson(decodedJson);
         posts.add(newPost);
         print("Post added: ${newPost.content} with id: ${newPost.id}");
@@ -66,9 +85,7 @@ abstract class _PostStore with Store {
   Future<void> likePost(Post post) async {
     try {
       post.likes++;
-      final url = '$apiUrl/${post.id}';
-      print(
-          "Liking post with URL: $url and payload: ${json.encode(post.toJson())}");
+      final url = '$apiUrl/posts/${post.id}';
       final response = await http.put(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
@@ -90,9 +107,7 @@ abstract class _PostStore with Store {
   Future<void> addComment(Post post, String comment) async {
     try {
       post.comments.add(comment);
-      final url = '$apiUrl/${post.id}';
-      print(
-          "Adding comment to post with URL: $url and payload: ${json.encode(post.toJson())}");
+      final url = '$apiUrl/posts/${post.id}';
       final response = await http.put(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'post_store.dart';
-import 'home_screen.dart';
+import 'mobX/post_store.dart';
+import 'user_selection_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: HomeScreen(),
+        home: UserSelectionScreen(),
       ),
     );
   }
