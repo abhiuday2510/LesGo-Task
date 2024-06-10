@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart'; // Import the share_plus package
 import 'post_store.dart';
 import 'post_model.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,7 +37,8 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: AssetImage('assets/user_avatar.png'),
+                        backgroundImage:
+                            NetworkImage("https://placehold.co/600x400.png"),
                       ),
                       title: Text('User Name'),
                       subtitle: Text('Location'),
@@ -58,6 +60,10 @@ class HomeScreen extends StatelessWidget {
                           icon: Icon(Icons.comment),
                           onPressed: () =>
                               _addComment(context, postStore, post),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.share),
+                          onPressed: () => _sharePost(post),
                         ),
                       ],
                     ),
@@ -176,5 +182,13 @@ class HomeScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _sharePost(Post post) {
+    if (post.imageUrl != null) {
+      Share.shareXFiles([XFile(post.imageUrl!)], text: post.content);
+    } else {
+      Share.share(post.content);
+    }
   }
 }
