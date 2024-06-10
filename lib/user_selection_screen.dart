@@ -15,7 +15,7 @@ class UserSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select User'),
+        title: const Text('Select User'),
       ),
       body: ListView.builder(
         itemCount: users.length,

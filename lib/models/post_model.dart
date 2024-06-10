@@ -4,7 +4,7 @@ class Post {
   String? imageUrl;
   int likes;
   List<String> comments;
-  String userId; // Add userId to track who created the post
+  String userId;
 
   Post({
     required this.id,
@@ -22,7 +22,7 @@ class Post {
       imageUrl: json['imageUrl'],
       likes: json['likes'],
       comments: List<String>.from(json['comments']),
-      userId: json['userId'], // Deserialize userId
+      userId: json['userId'],
     );
   }
 
@@ -33,7 +33,7 @@ class Post {
       'imageUrl': imageUrl,
       'likes': likes,
       'comments': comments,
-      'userId': userId, // Serialize userId
+      'userId': userId,
     };
   }
 }

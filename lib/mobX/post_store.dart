@@ -42,9 +42,10 @@ abstract class _PostStore with Store {
       if (response.statusCode == 200) {
         List<dynamic> userList = json.decode(response.body);
         users = ObservableMap<String, User>.of(
-          Map.fromIterable(userList,
-              key: (u) => u['id'] as String,
-              value: (u) => User.fromJson(u as Map<String, dynamic>)),
+          {
+            for (var u in userList)
+              u['id'] as String: User.fromJson(u as Map<String, dynamic>)
+          },
         );
         print("Fetched users: ${users.length}");
       } else {
