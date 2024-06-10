@@ -15,6 +15,12 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Social Media App'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add_a_photo),
+            onPressed: () => _addPost(context, postStore),
+          )
+        ],
       ),
       body: Observer(
         builder: (_) {
@@ -23,27 +29,50 @@ class HomeScreen extends StatelessWidget {
             itemCount: postStore.posts.length,
             itemBuilder: (context, index) {
               final post = postStore.posts[index];
-              return ListTile(
-                title: Text(post.content),
-                leading: post.imageUrl != null
-                    ? Image.file(File(post.imageUrl!))
-                    : null,
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
+              return Card(
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                      icon: Icon(Icons.thumb_up),
-                      onPressed: () => postStore.likePost(post),
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage('assets/user_avatar.png'),
+                      ),
+                      title: Text('User Name'),
+                      subtitle: Text('Location'),
                     ),
-                    Text('${post.likes}'),
-                  ],
-                ),
-                subtitle: Column(
-                  children: [
-                    for (var comment in post.comments) Text(comment),
-                    TextField(
-                      onSubmitted: (value) => postStore.addComment(post, value),
-                      decoration: InputDecoration(hintText: 'Add a comment'),
+                    if (post.imageUrl != null) Image.file(File(post.imageUrl!)),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(post.content),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.thumb_up),
+                          onPressed: () => postStore.likePost(post),
+                        ),
+                        Text('${post.likes}'),
+                        IconButton(
+                          icon: Icon(Icons.comment),
+                          onPressed: () =>
+                              _addComment(context, postStore, post),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (var comment in post.comments)
+                            Text(
+                              comment,
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -51,10 +80,6 @@ class HomeScreen extends StatelessWidget {
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _addPost(context, postStore),
-        child: Icon(Icons.add),
       ),
     );
   }
@@ -99,9 +124,12 @@ class HomeScreen extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     final newPost = Post(
-                        id: "0",
-                        content: contentController.text,
-                        imageUrl: imageUrl);
+                      id: "",
+                      content: contentController.text,
+                      imageUrl: imageUrl,
+                      likes: 0,
+                      comments: [],
+                    );
                     print("Adding post: ${newPost.content}");
                     postStore.addPost(newPost).then((_) {
                       print("Post added successfully");
@@ -115,6 +143,36 @@ class HomeScreen extends StatelessWidget {
               ],
             );
           },
+        );
+      },
+    );
+  }
+
+  void _addComment(BuildContext context, PostStore postStore, Post post) {
+    final commentController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add Comment'),
+          content: TextField(
+            controller: commentController,
+            decoration: InputDecoration(hintText: 'Enter comment'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                postStore.addComment(post, commentController.text).then((_) {
+                  print("Comment added successfully");
+                  Navigator.of(context).pop();
+                }).catchError((error) {
+                  print("Failed to add comment: $error");
+                });
+              },
+              child: Text('Add Comment'),
+            ),
+          ],
         );
       },
     );

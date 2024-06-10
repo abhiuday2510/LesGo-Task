@@ -1,15 +1,6 @@
 {
   "posts": [
     {
-      "id": "1",
-      "content": "First post",
-      "imageUrl": null,
-      "likes": 2,
-      "comments": [
-        "wow"
-      ]
-    },
-    {
       "id": "2a73",
       "content": "test",
       "imageUrl": "/data/user/0/com.example.lesgo_task/cache/441610fd-ff24-49b9-a068-c665cdf3d6b3/1000000033.jpg",

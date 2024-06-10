@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
         Provider<PostStore>(create: (_) => PostStore()..fetchPosts()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Social Media App',
         theme: ThemeData(
           primarySwatch: Colors.blue,
