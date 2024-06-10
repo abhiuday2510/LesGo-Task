@@ -71,15 +71,18 @@
   "users": [
     {
       "id": "1",
-      "name": "User1"
+      "name": "User1",
+      "followers": 2
     },
     {
       "id": "2",
-      "name": "User2"
+      "name": "User2",
+      "followers": 2
     },
     {
       "id": "3",
-      "name": "User3"
+      "name": "User3",
+      "followers": 1
     }
   ]
 }

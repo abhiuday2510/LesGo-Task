@@ -8,20 +8,49 @@ import 'models/post_model.dart';
 import 'models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final User user;
 
   const HomeScreen({super.key, required this.user});
 
   @override
-  Widget build(BuildContext context) {
-    final postStore = Provider.of<PostStore>(context);
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Map<String, bool> followStatus = {};
+
+  @override
+  void initState() {
+    super.initState();
+    final postStore = Provider.of<PostStore>(context, listen: false);
     postStore.fetchPosts();
     postStore.fetchUsers();
+  }
+
+  void toggleFollowStatus(
+      String userId, bool isFollowing, PostStore postStore) {
+    setState(() {
+      followStatus[userId] = !isFollowing;
+    });
+
+    if (isFollowing) {
+      postStore.unfollowUser(userId);
+    } else {
+      postStore.followUser(userId);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final postStore = Provider.of<PostStore>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Signed In User - ${user.name}'),
+        title: Observer(
+          builder: (_) => Text(
+              '${widget.user.name} : ${postStore.users[widget.user.id]?.followers ?? widget.user.followers} followers'),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_a_photo),
@@ -36,6 +65,12 @@ class HomeScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final post = postStore.posts[index];
               final postUser = postStore.users[post.userId];
+
+              if (postUser == null) return Container();
+
+              bool isFollowing =
+                  followStatus[post.userId] ?? (postUser.followers > 0);
+
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: Column(
@@ -46,8 +81,15 @@ class HomeScreen extends StatelessWidget {
                         backgroundImage:
                             NetworkImage("https://placehold.co/600x400.png"),
                       ),
-                      title: Text(postUser?.name ?? 'Unknown User'),
+                      title: Text(postUser.name),
                       subtitle: const Text('Location'),
+                      trailing: post.userId != widget.user.id
+                          ? ElevatedButton(
+                              onPressed: () => toggleFollowStatus(
+                                  post.userId, isFollowing, postStore),
+                              child: Text(isFollowing ? 'Unfollow' : 'Follow'),
+                            )
+                          : null,
                     ),
                     if (post.imageUrl != null) Image.file(File(post.imageUrl!)),
                     Padding(
@@ -143,7 +185,7 @@ class HomeScreen extends StatelessWidget {
                       imageUrl: imageUrl,
                       likes: 0,
                       comments: [],
-                      userId: user.id,
+                      userId: widget.user.id,
                     );
                     postStore.addPost(newPost).then((_) {
                       Navigator.of(context).pop();
@@ -151,7 +193,7 @@ class HomeScreen extends StatelessWidget {
                       print("Failed to add post: $error");
                     });
                   },
-                  child: Text('Post'),
+                  child: const Text('Post'),
                 ),
               ],
             );
@@ -179,7 +221,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 postStore
                     .addComment(
-                        post, "${user.name} : ${commentController.text}")
+                        post, "${widget.user.name} : ${commentController.text}")
                     .then((_) {
                   Navigator.of(context).pop();
                 }).catchError((error) {

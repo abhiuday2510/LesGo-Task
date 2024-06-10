@@ -83,6 +83,56 @@ abstract class _PostStore with Store {
   }
 
   @action
+  Future<void> followUser(String userId) async {
+    try {
+      final user = users[userId];
+      if (user != null) {
+        user.followers++;
+        final url = '$apiUrl/users/$userId';
+        final response = await http.put(
+          Uri.parse(url),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(user.toJson()),
+        );
+
+        if (response.statusCode == 200) {
+          users[userId] = User.fromJson(json.decode(response.body));
+          print("User followed: ${user.name}");
+        } else {
+          print("Failed to follow user: ${response.statusCode}");
+        }
+      }
+    } catch (e) {
+      print("Error following user: $e");
+    }
+  }
+
+  @action
+  Future<void> unfollowUser(String userId) async {
+    try {
+      final user = users[userId];
+      if (user != null) {
+        user.followers--;
+        final url = '$apiUrl/users/$userId';
+        final response = await http.put(
+          Uri.parse(url),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(user.toJson()),
+        );
+
+        if (response.statusCode == 200) {
+          users[userId] = User.fromJson(json.decode(response.body));
+          print("User unfollowed: ${user.name}");
+        } else {
+          print("Failed to unfollow user: ${response.statusCode}");
+        }
+      }
+    } catch (e) {
+      print("Error unfollowing user: $e");
+    }
+  }
+
+  @action
   Future<void> likePost(Post post) async {
     try {
       post.likes++;

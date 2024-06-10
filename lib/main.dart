@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<PostStore>(create: (_) => PostStore()..fetchPosts()),
+        Provider<PostStore>(create: (_) => PostStore()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -22,8 +22,28 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: UserSelectionScreen(),
+        home: Initializer(),
       ),
+    );
+  }
+}
+
+class Initializer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final postStore = Provider.of<PostStore>(context, listen: false);
+
+    return FutureBuilder(
+      future: postStore.fetchUsers(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return const Center(child: Text('Error loading users'));
+        } else {
+          return UserSelectionScreen();
+        }
+      },
     );
   }
 }
